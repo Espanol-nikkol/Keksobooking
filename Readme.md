@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Коля Колганов](https://up.htmlacademy.ru/javascript/17/user/794007).
-* Наставник: `Неизвестно`.
+* Наставник: `Увы`.
 
 ---
 
