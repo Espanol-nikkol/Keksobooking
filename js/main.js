@@ -26,8 +26,8 @@ var createdAds = function () {
       author: 'img/avatars/user' + getAvatar() + '.png',
       offer: typesFlats[getRandomNumber(0, 3)],
       location: {
-        x: getRandomNumber(65, 1135),
-        y: getRandomNumber(130, 630)
+        x: getRandomNumber(96, 1166),
+        y: getRandomNumber(214, 714)
       }
     };
   }
