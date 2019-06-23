@@ -16,8 +16,21 @@ var getAvatar = function () {
   return numberAvatar;
 };
 
+var getAddress = function () {
+  var address = document.getElementById('address');
+  var mainPinX = parseFloat(mainPin.style.left);
+  var mainPinY = parseFloat(mainPin.style.top);
+  address.placeholder = mainPinX + 37 + ', ' + (mainPinY + 77);
+}
+
 var activatedMap = function () {
   document.querySelector('.map').classList.toggle('map--faded', false);
+  var fields = document.querySelectorAll('fieldset');
+  for (var i = 0; i < fields.length; i++) {
+    fields[i].disabled = false;
+  }
+  getAddress();
+  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
 };
 
 var createdAds = function () {
@@ -33,9 +46,6 @@ var createdAds = function () {
   }
 };
 
-activatedMap();
-createdAds();
-
 var renderPins = function () {
   var fragment = document.createDocumentFragment();
   var template = document.getElementById('pin').content.querySelector('.map__pin').cloneNode(true);
@@ -49,4 +59,8 @@ var renderPins = function () {
   document.querySelector('.map__pins').appendChild(fragment);
 };
 
-renderPins();
+
+var mainPin = document.querySelector('.map__pin--main');
+console.log(mainPin)
+mainPin.addEventListener('click', activatedMap);
+createdAds();
