@@ -1,6 +1,12 @@
 'use strict';
 
 var KEYCODE_ENTER = 27;
+var BORDER_MAP_LEFT = 96;
+var BORDER_MAP_RIGHT = 1166;
+var BORDER_MAP_TOP = 130;
+var BORDER_MAP_BOTTOM = 630;
+var SHIFT_END_MAIN_PIN_X = 37; 
+var SHIFT_END_MAIN_PIN_Y = 77;
 
 var typesFlats = ['palace', 'flat', 'house', 'bungalo'];
 var avatars = ['01', '02', '03', '04', '05', '06', '07', '08'];
@@ -10,6 +16,7 @@ var fieldType = document.getElementById('type');
 var mainPin = document.querySelector('.map__pin--main');
 var fieldTimeIn = document.getElementById('timein');
 var fieldTimeOut = document.getElementById('timeout');
+var map = document.querySelector('.map');
 
 var getRandomNumber = function (min, max) {
   var randomNumber = Math.round(min - 0.5 + Math.random() * (max - min + 1));
@@ -27,8 +34,12 @@ var getAddress = function () {
   var address = document.getElementById('address');
   var mainPinX = parseFloat(mainPin.style.left);
   var mainPinY = parseFloat(mainPin.style.top);
-  address.value = mainPinX + 37 + ', ' + (mainPinY + 77);
-  address.placeholder = mainPinX + 37 + ', ' + (mainPinY + 77);
+  var coordEndMainPin = {
+    x: mainPinX + SHIFT_END_MAIN_PIN_X,
+    y: mainPinY+ SHIFT_END_MAIN_PIN_Y
+  }
+  address.value = coordEndMainPin.x + ', ' + coordEndMainPin.y;
+  address.placeholder = coordEndMainPin.x + ', ' + coordEndMainPin.y;
 }
 
 var activatedMap = function () {
@@ -54,8 +65,8 @@ var createdAds = function () {
       author: 'img/avatars/user' + getAvatar() + '.png',
       offer: typesFlats[getRandomNumber(0, 3)],
       location: {
-        x: getRandomNumber(96, 1166),
-        y: getRandomNumber(214, 714)
+        x: getRandomNumber(BORDER_MAP_LEFT, BORDER_MAP_RIGHT),
+        y: getRandomNumber(BORDER_MAP_TOP, BORDER_MAP_BOTTOM)
       }
     };
   }
@@ -101,11 +112,62 @@ var validationTimeOut = function () {
   fieldTimeIn.options[selectedIndex].selected = true;
 }
 
-mainPin.addEventListener('click', activatedMap);
+
+
+
+
+var onMainPinMouseDown = function(evt) {
+  evt.preventDefault()
+  var startCoord = {
+      x: evt.clientX,
+      y: evt.clientY
+    }  
+    var onMainPinMouseMove = function(evtMove) {
+      evtMove.preventDefault();
+    var shift = {
+      x: startCoord.x - evtMove.clientX,
+      y: startCoord.y - evtMove.clientY
+    }
+
+    startCoord = {
+      x: evtMove.clientX,
+      y: evtMove.clientY
+    }
+
+    mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+    mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
+    getAddress();
+    if (mainPin.offsetTop <= BORDER_MAP_TOP) {
+      map.removeEventListener('mousemove', onMainPinMouseMove);
+      mainPin.style.top = mainPin.style.top + 1;
+    }
+    if (mainPin.offsetTop >= BORDER_MAP_BOTTOM) {
+      map.removeEventListener('mousemove', onMainPinMouseMove);
+      mainPin.style.top = mainPin.style.top - 1;
+    }
+  }
+
+
+    //document.removeEventListener('mousemove', onMainPinMouseMove);
+    
+    
+  var onMainPinMouseUp = function (evtUp) {
+    evtUp.preventDefault();
+    map.removeEventListener('mousemove', onMainPinMouseMove);
+    document.removeEventListener('mouseup', onMainPinMouseUp);
+  }
+      activatedMap()
+
+    map.addEventListener('mousemove', onMainPinMouseMove)
+  document.addEventListener('mouseup', onMainPinMouseUp);
+}
+
+
+
+
+mainPin.addEventListener('mousedown', onMainPinMouseDown);
 mainPin.addEventListener('keydown', onMainPinPressEnter);
 createdAds();
 fieldType.addEventListener('change', validationTypesPrice);
 fieldTimeIn.addEventListener('change', validationTimeIn);
 fieldTimeOut.addEventListener('change', validationTimeOut);
-document.addEventListener('invalid', function () {
-})
