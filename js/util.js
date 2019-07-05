@@ -3,6 +3,7 @@
   window.util = {
     const: {
       KEYCODE_ENTER: 13,
+      KEYCODE_ESC: 27,
       BORDER_MAP_LEFT: 26,
       BORDER_MAP_RIGHT: 1166,
       BORDER_MAP_TOP: 200,

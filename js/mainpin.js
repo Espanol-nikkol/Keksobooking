@@ -4,6 +4,7 @@
   var mainPin = window.util.variable.mainPin;
   var consts = window.util.const;
   var map = document.querySelector('.map');
+  var flagOfActivation = 0;
 
   var onMainPinMouseDown = function (evt) {
     evt.preventDefault();
@@ -61,26 +62,29 @@
     document.removeEventListener('mouseup', onMainPinMouseUp);
   };
 
-  var activatedMap = function () {
+
+  var activatedMap = function (card) {
     document.querySelector('.map').classList.toggle('map--faded', false);
     var fields = document.querySelectorAll('fieldset');
     for (var i = 0; i < fields.length; i++) {
       fields[i].disabled = false;
     }
-    window.renderPins();
+    window.renderPins(card);
     window.util.getAddress();
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');
   };
 
-
   mainPin.addEventListener('mousedown', function (evt) {
     onMainPinMouseDown(evt);
-    activatedMap();
+    flagOfActivation = flagOfActivation + 1;
+    if (flagOfActivation === 1) {
+      activatedMap(card);
+    }
     map.addEventListener('mousemove', onMainPinMouseMove);
     document.addEventListener('mouseup', onMainPinMouseUp);
   });
   mainPin.addEventListener('keydown', function (evt) {
-    window.util.isEnterEvent(evt, window.cards.activatedMap);
+    window.util.isEnterEvent(evt, activatedMap);
   }
   );
-}) ();
+})();
