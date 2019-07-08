@@ -2,7 +2,11 @@
 
 (function () {
   var xhr = new XMLHttpRequest();
-  var card = [];
+  var sizeMainPin = window.util.const.SizeMainPin;
+  var pinsAll = [];
+  var pins = [];
+
+  window.card = [];
   xhr.open('get', 'https://js.dump.academy/keksobooking/data');
   xhr.send();
 
@@ -26,7 +30,7 @@
   };
   xhr.addEventListener('load', function () {
     if (xhr.status === 200) {
-      card = JSON.parse(xhr.responseText);
+      window.card = JSON.parse(xhr.responseText);
     } else {
       onError();
     }
@@ -36,17 +40,29 @@
     onError();
   });
 
+  var isNoMainPin = function (elem) {
+    return elem.className === 'map__pin';
+  }
 
-  window.renderPins = function () {
+  window.clearPins = function () {
+    pinsAll = [].slice.call(document.querySelectorAll('.map__pin'));
+    pins = pinsAll.filter(isNoMainPin).forEach(function (elem) {
+      elem.remove();
+    })
+  }
+
+  window.renderPins = function (arr) {
     var fragment = document.createDocumentFragment();
     var template = document.getElementById('pin').content.querySelector('.map__pin').cloneNode(true);
-    for (var i = 0; i < card.length; i++) {
-      var pin = template.cloneNode(true);
-      pin.style.left = card[i].location.x - 31 + 'px';
-      pin.style.top = card[i].location.y - 70 + 'px';
-      pin.querySelector('img').src = card[i].author.avatar;
-      fragment.appendChild(pin);
-    }
+    arr
+      .slice(0, 5)
+      .forEach(function (elem) {
+        var pin = template.cloneNode(true);
+        pin.style.left = elem.location.x - sizeMainPin.WIDTH/2 + 'px';
+        pin.style.top = elem.location.y - sizeMainPin.WIDTH + 'px';
+        pin.querySelector('img').src = elem.author.avatar;
+        fragment.appendChild(pin);
+      });
     document.querySelector('.map__pins').appendChild(fragment);
   };
 })();

@@ -27,6 +27,20 @@
       y: evtMove.clientY
     };
 
+    var createBordersVertical = function (side) {
+      switch (side) {
+        case top: 
+          if (mainPin.offsetTop <= (consts.BorderMap.TOP - consts.PaddingMap.TOP)) {
+            map.removeEventListener('mousemove', onMainPinMouseMove);
+            var newPosition = parseFloat(mainPin.style.top) + 5;
+            newPosition = newPosition + 'px';
+            mainPin.style.top = newPosition;
+          }
+          break;
+      }
+      
+    }
+
     mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
     mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
     window.util.getAddress();
@@ -63,13 +77,13 @@
   };
 
 
-  var activatedMap = function (card) {
+  var activatedMap = function () {
     document.querySelector('.map').classList.toggle('map--faded', false);
     var fields = document.querySelectorAll('fieldset');
-    for (var i = 0; i < fields.length; i++) {
-      fields[i].disabled = false;
-    }
-    window.renderPins(card);
+    fields.forEach(function (elem) {
+      elem.disabled = false;
+    }) 
+    window.renderPins(window.card);
     window.util.getAddress();
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');
   };
@@ -78,7 +92,7 @@
     onMainPinMouseDown(evt);
     flagOfActivation = flagOfActivation + 1;
     if (flagOfActivation === 1) {
-      activatedMap(card);
+      activatedMap();
     }
     map.addEventListener('mousemove', onMainPinMouseMove);
     document.addEventListener('mouseup', onMainPinMouseUp);
