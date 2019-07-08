@@ -2,12 +2,26 @@
 (function () {
   window.util = {
     const: {
-      KEYCODE_ENTER: 13,
-      KEYCODE_ESC: 27,
-      BORDER_MAP_LEFT: 26,
-      BORDER_MAP_RIGHT: 1166,
-      BORDER_MAP_TOP: 200,
-      BORDER_MAP_BOTTOM: 600
+      Keycode: {
+        ENTER: 13,
+        ESC: 27
+      },
+      BorderMap: {
+        LEFT: 26,
+        RIGHT: 1166,
+        TOP: 200,
+        BOTTOM: 600
+      },
+      PaddingMap: {
+        LEFT: 16,
+        RIGHT: 30,
+        TOP: 70,
+        BOTTOM: 30
+      },
+      SizeMainPin: {
+        WIDTH: 62,
+        HEIGHT: 70
+      }
     },
     variable: {
       mainPin: document.querySelector('.map__pin--main')
@@ -27,12 +41,9 @@
       var address = document.getElementById('address');
       var mainPinX = parseFloat(window.util.variable.mainPin.style.left);
       var mainPinY = parseFloat(window.util.variable.mainPin.style.top);
-      var coordEndMainPin = {
-        x: mainPinX + SHIFT_END_MAIN_PIN_X,
-        y: mainPinY + SHIFT_END_MAIN_PIN_Y
-      };
-      address.value = coordEndMainPin.x + ', ' + coordEndMainPin.y;
-      address.placeholder = coordEndMainPin.x + ', ' + coordEndMainPin.y;
+      var coordsEndMainPin = [(mainPinX + SHIFT_END_MAIN_PIN_X), (mainPinY + SHIFT_END_MAIN_PIN_Y)];
+      address.value = coordsEndMainPin.join(', ');
+      address.placeholder = address.value;
     }
   };
   return window.util;
