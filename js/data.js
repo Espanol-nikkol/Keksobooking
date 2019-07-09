@@ -20,7 +20,7 @@
     };
 
     var onEscErrorBtn = function (evt) {
-      if (evt.keyCode === window.util.const.KEYCODE_ESC) {
+      if (evt.keyCode === window.util.const.Keycode.ESC) {
         errorMessage.remove();
         document.removeEventListener('keydown', onEscErrorBtn);
       }

@@ -4,7 +4,7 @@
   var mainPin = window.util.variable.mainPin;
   var consts = window.util.const;
   var map = document.querySelector('.map');
-  var flagOfActivation = 1;
+  window.flagOfActivation = 1;
   var newPosition = '';
 
   var createBorderLeft = function () {
@@ -98,9 +98,9 @@
   mainPin.addEventListener('mousedown', function (evt) {
     if (window.card.length > 0) {
       onMainPinMouseDown(evt);
-      if (flagOfActivation === 1) {
+      if (window.flagOfActivation === 1) {
         activatedMap();
-        flagOfActivation = flagOfActivation + 1;
+        window.flagOfActivation = window.flagOfActivation + 1;
       }
       map.addEventListener('mousemove', onMainPinMouseMove);
       document.addEventListener('mouseup', onMainPinMouseUp);
