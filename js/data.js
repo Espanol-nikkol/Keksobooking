@@ -42,14 +42,14 @@
 
   var isNoMainPin = function (elem) {
     return elem.className === 'map__pin';
-  }
+  };
 
   window.clearPins = function () {
     pinsAll = [].slice.call(document.querySelectorAll('.map__pin'));
     pins = pinsAll.filter(isNoMainPin).forEach(function (elem) {
       elem.remove();
-    })
-  }
+    });
+  };
 
   window.renderPins = function (arr) {
     var fragment = document.createDocumentFragment();
@@ -58,9 +58,12 @@
       .slice(0, 5)
       .forEach(function (elem) {
         var pin = template.cloneNode(true);
-        pin.style.left = elem.location.x - sizeMainPin.WIDTH/2 + 'px';
+        pin.style.left = elem.location.x - sizeMainPin.WIDTH / 2 + 'px';
         pin.style.top = elem.location.y - sizeMainPin.WIDTH + 'px';
         pin.querySelector('img').src = elem.author.avatar;
+        pin.addEventListener('click', function () {
+          window.renderPopUp(elem);
+        });
         fragment.appendChild(pin);
       });
     document.querySelector('.map__pins').appendChild(fragment);
