@@ -26,6 +26,12 @@
     variable: {
       mainPin: document.querySelector('.map__pin--main')
     },
+    houseEnToHouseRu: {
+      'bungalo': 'Бунгало',
+      'house': 'Дом',
+      'flat': 'Квартира',
+      'palace': 'Дворец'
+    },
     isEnterEvent: function (evt, action) {
       if (evt.keyCode === this.consts.KEYCODE_ENTER) {
         action();
