@@ -33,7 +33,12 @@
       'palace': 'Дворец'
     },
     isEnterEvent: function (evt, action) {
-      if (evt.keyCode === this.consts.KEYCODE_ENTER) {
+      if (evt.keyCode === this.const.Keycode.ENTER) {
+        action();
+      }
+    },
+    isEscEvent: function (evt, action) {
+      if (evt.keyCode === this.const.Keycode.ESC) {
         action();
       }
     },

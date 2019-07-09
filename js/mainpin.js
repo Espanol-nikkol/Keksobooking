@@ -84,7 +84,6 @@
     document.removeEventListener('mouseup', onMainPinMouseUp);
   };
 
-
   var activatedMap = function () {
     document.querySelector('.map').classList.toggle('map--faded', false);
     var fields = document.querySelectorAll('fieldset');
