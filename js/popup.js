@@ -1,12 +1,18 @@
 'use strict';
 
 (function () {
+  window.removePopUp = function () {
+    var mapLastChild = document.querySelector('.map').lastElementChild;
+    if (mapLastChild.className === 'map__card popup') {
+      mapLastChild.remove();
+    }      
+  }
+
   window.renderPopUp = function (pin) {
     var fragment = document.createDocumentFragment();
     var template = document.getElementById('card').content.querySelector('.map__card').cloneNode(true);
     var featuresList = template.querySelectorAll('.popup__feature');
     var map = document.querySelector('.map');
-    var mapLastChild = map.lastElementChild;
     var featuresAll = [].slice.call(featuresList);
     var isFeatures = function (elem) {
       for (var i = 0; i < pin.offer.features.length; i++) {
@@ -57,9 +63,7 @@
     document.addEventListener('keydown', onEscPress);
 
     fragment.appendChild(template);
-    if (mapLastChild.className === 'map__card popup') {
-      mapLastChild.remove();
-    }
+    window.removePopUp();
     map.appendChild(fragment);
     document.querySelector('.popup__close').addEventListener('click', function () {
       map.querySelector('.map__card').remove();
