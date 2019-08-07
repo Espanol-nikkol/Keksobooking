@@ -107,7 +107,7 @@
     }
   }
   );
-  
+
   mainPin.addEventListener('keydown', function (evt) {
     window.util.isEnterEvent(evt, activatedMap);
   }

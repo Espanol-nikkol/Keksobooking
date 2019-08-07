@@ -118,10 +118,10 @@
 
   var deactivatedMap = function () {
     document.querySelector('.map').classList.toggle('map--faded', true);
-    var fields = document.querySelectorAll('fieldset');
-    fields.forEach(function (elem) {
-      elem.disabled = true;
-    });
+    document.querySelectorAll('fieldset')
+      .forEach(function (elem) {
+        elem.disabled = true;
+      });
     document.querySelectorAll('.map__pin')
         .forEach(function (elem, index) {
           if (index > 0) {
@@ -140,7 +140,9 @@
     fieldRooms.value = '1';
     fieldGuests.value = '0';
     document.getElementById('description').value = '';
-    document.querySelector('.popup').remove();
+    if (document.querySelector('.popup')) {
+      document.querySelector('.popup').remove();
+    }
     document.querySelectorAll('.feature__checkbox').forEach(function (elem) {
       elem.checked = false;
     });

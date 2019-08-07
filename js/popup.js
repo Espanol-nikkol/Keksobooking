@@ -5,8 +5,8 @@
     var mapLastChild = document.querySelector('.map').lastElementChild;
     if (mapLastChild.className === 'map__card popup') {
       mapLastChild.remove();
-    }      
-  }
+    }
+  };
 
   window.renderPopUp = function (pin) {
     var fragment = document.createDocumentFragment();

@@ -4,7 +4,6 @@
   var xhr = new XMLHttpRequest();
   var sizeMainPin = window.util.const.SizeMainPin;
   var pinsAll = [];
-  var pins = [];
 
   window.card = [];
   xhr.open('get', 'https://js.dump.academy/keksobooking/data');
@@ -46,7 +45,7 @@
 
   window.clearPins = function () {
     pinsAll = [].slice.call(document.querySelectorAll('.map__pin'));
-    pins = pinsAll.filter(isNoMainPin).forEach(function (elem) {
+    pinsAll.filter(isNoMainPin).forEach(function (elem) {
       elem.remove();
     });
   };
