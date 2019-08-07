@@ -11,7 +11,7 @@
   xhr.send();
 
   var onError = function () {
-    var template = document.getElementById('error').content.querySelector('.error').cloneNode(true);
+    var template = document.getElementById('error').querySelector('.error').cloneNode(true);
     document.querySelector('main').appendChild(template);
     var errorMessage = document.querySelector('.error');
     var errorBtn = document.querySelector('.error__button');
@@ -63,6 +63,7 @@
         pin.querySelector('img').src = elem.author.avatar;
         pin.addEventListener('click', function () {
           window.renderPopUp(elem);
+          pin.classList.add('map__pin--active')
         });
         fragment.appendChild(pin);
       });

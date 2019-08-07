@@ -4,7 +4,7 @@
 @font-face {
   font-family: "Roboto";
   src: url("../fonts/Roboto-Bold.woff2") format("woff2"),
-      url("../fonts/Roboto-Bold.woff") format("woff");
+      url("../fonts/Roboto-Bold.woff") format("woff"),
   font-weight: 900;
   font-style: normal;
   font-display: swap;
@@ -692,6 +692,10 @@ fieldset {
   background-color: #ff6547;
   -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) inset;
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) inset;
+}
+
+.feature__checkbox:not(checked) + .feature {
+  background-color: #fafafa;
 }
 
 .feature--wifi {

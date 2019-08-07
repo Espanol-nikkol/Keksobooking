@@ -86,8 +86,7 @@
 
   var activatedMap = function () {
     document.querySelector('.map').classList.toggle('map--faded', false);
-    var fields = document.querySelectorAll('fieldset');
-    fields.forEach(function (elem) {
+    document.querySelectorAll('fieldset').forEach(function (elem) {
       elem.disabled = false;
     });
     window.renderPins(window.card);
