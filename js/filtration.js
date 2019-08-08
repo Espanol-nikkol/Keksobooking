@@ -12,13 +12,21 @@
   var priceSelected = '';
   var guestSelected = '';
 
+  window.Price = {
+    'bungalo': 0,
+    'flat': 1000,
+    'house': 5000,
+    'palace': 10000,
+    'low': 10000,
+    'medium': 50000
+  };
+
   var getHouseType = function (elem) {
     filters.house.flag = false;
     if (houseTypeSelected === 'any') {
       return true;
     }
     filters.house.flag = true;
-
     return elem.offer.type === houseTypeSelected;
   };
 
@@ -40,11 +48,11 @@
     var currentPrice = elem.offer.price;
     switch (priceSelected) {
       case 'low':
-        return currentPrice <= 10000;
+        return currentPrice <= window.Price.low;
       case 'middle':
-        return (currentPrice >= 10000 && currentPrice <= 50000);
+        return (currentPrice >= window.Price.low && currentPrice <= window.Price.medium);
       case 'high':
-        return currentPrice >= 50000;
+        return currentPrice >= window.Price.medium;
     }
     return undefined;
   };
@@ -134,6 +142,7 @@
     window.debounce(filters.house.filter);
     window.debounce(filters.rooms.filter);
     window.debounce(filters.price.filter);
+    window.debounce(filters.guests.filter);
     window.debounce(filters.features.filter);
   });
 })();

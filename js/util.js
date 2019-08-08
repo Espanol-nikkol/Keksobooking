@@ -42,10 +42,6 @@
         action();
       }
     },
-    getRandomNumber: function (min, max) {
-      var randomNumber = Math.round(min - 0.5 + Math.random() * (max - min + 1));
-      return randomNumber;
-    },
     getAddress: function () {
       var SHIFT_END_MAIN_PIN_X = 37;
       var SHIFT_END_MAIN_PIN_Y = 77;

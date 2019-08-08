@@ -6,6 +6,8 @@
   var map = document.querySelector('.map');
   window.flagOfActivation = 1;
   var newPosition = '';
+  window.fields = Array.from(document.querySelectorAll('fieldset'))
+      .concat(Array.from(document.querySelectorAll('select')));
 
   var createBorderLeft = function () {
     if (mainPin.offsetLeft <= (consts.BorderMap.LEFT - 16)) {
@@ -84,12 +86,15 @@
     document.removeEventListener('mouseup', onMainPinMouseUp);
   };
 
+  var turnOnFields = function () {
+    window.fields.forEach(function (elem) {
+        elem.disabled = false
+    });
+  };
+
   var activatedMap = function () {
     document.querySelector('.map').classList.toggle('map--faded', false);
-    var fields = document.querySelectorAll('fieldset');
-    fields.forEach(function (elem) {
-      elem.disabled = false;
-    });
+    turnOnFields();
     window.renderPins(window.card);
     window.util.getAddress();
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');

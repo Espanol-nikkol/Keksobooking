@@ -1,5 +1,11 @@
 'use strict';
+
 (function () {
+  var SUCCESS_CODE = 200;
+  var xhr = new XMLHttpRequest();
+  var sizeMainPin = window.util.const.SizeMainPin;
+  var pinsAll = [];
+  var fieldTitle = document.getElementById('title');
   var fieldPrice = document.getElementById('price');
   var fieldType = document.getElementById('type');
   var fieldTimeIn = document.getElementById('timein');
@@ -10,26 +16,57 @@
   var mainPin = window.util.variable.mainPin;
   var selectedIndex = '';
 
+  window.card = [];
+
+  var isNoMainPin = function (elem) {
+    return elem.className === 'map__pin';
+  };
+
+  window.clearPins = function () {
+    pinsAll = [].slice.call(document.querySelectorAll('.map__pin'));
+    pinsAll.filter(isNoMainPin).forEach(function (elem) {
+      elem.remove();
+    });
+  };
+
+  window.renderPins = function (arr) {
+    var fragment = document.createDocumentFragment();
+    var template = document.getElementById('pin').content.querySelector('.map__pin').cloneNode(true);
+    arr
+      .slice(0, 5)
+      .forEach(function (elem) {
+        var pin = template.cloneNode(true);
+        pin.style.left = elem.location.x - sizeMainPin.WIDTH / 2 + 'px';
+        pin.style.top = elem.location.y - sizeMainPin.WIDTH + 'px';
+        pin.querySelector('img').src = elem.author.avatar;
+        pin.addEventListener('click', function () {
+          window.renderPopUp(elem);
+        });
+        fragment.appendChild(pin);
+      });
+    document.querySelector('.map__pins').appendChild(fragment);
+  };
+  
   var validationTypesPrice = function () {
-    selectedIndex = fieldType.options.selectedIndex;
-    switch (fieldType.options[selectedIndex].value) {
+    switch (fieldType.value) {
       case 'flat':
-        fieldPrice.min = '1000';
-        fieldPrice.placeholder = '1000';
+        fieldPrice.min = window.Price.flat;
+        fieldPrice.placeholder = window.Price.flat;
         break;
       case 'house':
-        fieldPrice.min = '5000';
-        fieldPrice.placeholder = '5000';
+        fieldPrice.min = window.Price.house;
+        fieldPrice.placeholder = window.Price.house;
         break;
       case 'palace':
-        fieldPrice.min = '10000';
-        fieldPrice.placeholder = '10000';
+        fieldPrice.min = window.Price.palace;
+        fieldPrice.placeholder = window.Price.palace;
         break;
       default:
-        fieldPrice.min = '0';
-        fieldPrice.placeholder = '0';
+        fieldPrice.min = window.Price.bungalo;
+        fieldPrice.placeholder = window.Price.bungalo;
         break;
     }
+isValidity(fieldPrice)
   };
 
   var validationTimeIn = function () {
@@ -43,18 +80,19 @@
   };
 
   var validationRoomsGuests = function () {
-    selectedIndex = fieldRooms.options.selectedIndex;
-    var selectedRoom = fieldRooms.options[selectedIndex].value;
+    var selectedRoom = fieldRooms.value;
     if (selectedRoom === '100') {
       selectedRoom = 0;
     }
+
     for (var i = 0; i < fieldGuests.length; i++) {
-      if (selectedRoom < fieldGuests[i].value) {
-        fieldGuests.options[i].disabled = true;
-      } else {
-        fieldGuests.options[i].disabled = false;
-      }
+      fieldGuests.options[i].disabled = selectedRoom < fieldGuests[i].value;
     }
+    if (selectedRoom > 0) {
+      fieldGuests.options[3].disabled = true;
+    }
+
+fieldGuests.selectedOptions[0].disabled ? stateError(fieldGuests) : stateSuccess(fieldGuests);
   };
 
   var onSubmitClick = function () {
@@ -62,13 +100,13 @@
     var xhr = new XMLHttpRequest();
     xhr.open('post', 'https://js.dump.academy/keksobooking');
     xhr.send(formData);
+
     var onError = function () {
       var template = document.getElementById('error').content.querySelector('.error').cloneNode(true);
 
       document.querySelector('main').appendChild(template);
 
       var errorMessage = document.querySelector('.error');
-      var errorBtn = document.querySelector('.error__button');
       var onCLickErrorBtn = function () {
         errorMessage.remove();
       };
@@ -79,7 +117,11 @@
         }
       };
 
-      errorBtn.addEventListener('click', onCLickErrorBtn);
+      document.querySelectorAll('input').forEach(function (elem) {
+        isValidity(elem)
+      })
+
+      document.addEventListener('click', onCLickErrorBtn);
       document.addEventListener('keydown', onEscErrorBtn);
     };
 
@@ -103,7 +145,7 @@
     };
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
+      if (xhr.status === SUCCESS_CODE) {
         onSuccess();
         deactivatedMap();
       } else {
@@ -116,12 +158,14 @@
     });
   };
 
+  var turnOffFields = function () {
+    window.fields.forEach(function (elem) {
+        elem.disabled = false
+    });
+  };
   var deactivatedMap = function () {
     document.querySelector('.map').classList.toggle('map--faded', true);
-    document.querySelectorAll('fieldset')
-      .forEach(function (elem) {
-        elem.disabled = true;
-      });
+    turnOffFields();
     document.querySelectorAll('.map__pin')
         .forEach(function (elem, index) {
           if (index > 0) {
@@ -147,10 +191,41 @@
       elem.checked = false;
     });
     document.querySelector('.ad-form').classList.add('ad-form--disabled');
+  };
+
+  var stateSuccess = function (field) {
+          field.style.border = '1px solid #d9d9d3';
 
   };
 
-  validationRoomsGuests();
+  var stateError = function (field) {
+          field.style.border = '3px solid red'
+
+  }
+
+  var isValidity = function (field) {
+    field.checkValidity();
+field.validity.valid ? stateSuccess(field) : stateError(field);
+  };
+
+  xhr.open('get', 'https://js.dump.academy/keksobooking/data');
+  xhr.send();
+  xhr.addEventListener('load', function () {
+    if (xhr.status === 200) {
+      window.card = JSON.parse(xhr.responseText);
+    } else {
+      onError();
+    }
+  });
+  fieldTitle.addEventListener('input', function () {
+    isValidity(fieldTitle)
+  });
+  fieldPrice.addEventListener('input', function () {
+    isValidity(fieldPrice)
+  })
+  fieldGuests.addEventListener('change', function () {
+    fieldGuests.selectedOptions[0].disabled ? stateError(fieldGuests) : stateSuccess(fieldGuests);
+  })
   fieldType.addEventListener('change', validationTypesPrice);
   fieldTimeIn.addEventListener('change', validationTimeIn);
   fieldTimeOut.addEventListener('change', validationTimeOut);
@@ -163,4 +238,11 @@
     evt.preventDefault();
     deactivatedMap();
   });
+
+
+
+  xhr.addEventListener('error', function () {
+    onError();
+  });
+
 })();
