@@ -88,7 +88,7 @@
 
   var turnOnFields = function () {
     window.fields.forEach(function (elem) {
-        elem.disabled = false
+      elem.disabled = false;
     });
   };
 

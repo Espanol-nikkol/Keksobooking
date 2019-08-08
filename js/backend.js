@@ -33,20 +33,20 @@
     var fragment = document.createDocumentFragment();
     var template = document.getElementById('pin').content.querySelector('.map__pin').cloneNode(true);
     arr
-      .slice(0, 5)
-      .forEach(function (elem) {
-        var pin = template.cloneNode(true);
-        pin.style.left = elem.location.x - sizeMainPin.WIDTH / 2 + 'px';
-        pin.style.top = elem.location.y - sizeMainPin.WIDTH + 'px';
-        pin.querySelector('img').src = elem.author.avatar;
-        pin.addEventListener('click', function () {
-          window.renderPopUp(elem);
-        });
-        fragment.appendChild(pin);
+    .slice(0, 5)
+    .forEach(function (elem) {
+      var pin = template.cloneNode(true);
+      pin.style.left = elem.location.x - sizeMainPin.WIDTH / 2 + 'px';
+      pin.style.top = elem.location.y - sizeMainPin.WIDTH + 'px';
+      pin.querySelector('img').src = elem.author.avatar;
+      pin.addEventListener('click', function () {
+        window.renderPopUp(elem);
       });
+      fragment.appendChild(pin);
+    });
     document.querySelector('.map__pins').appendChild(fragment);
   };
-  
+
   var validationTypesPrice = function () {
     switch (fieldType.value) {
       case 'flat':
@@ -66,7 +66,7 @@
         fieldPrice.placeholder = window.Price.bungalo;
         break;
     }
-isValidity(fieldPrice)
+    isValidity(fieldPrice);
   };
 
   var validationTimeIn = function () {
@@ -92,38 +92,42 @@ isValidity(fieldPrice)
       fieldGuests.options[3].disabled = true;
     }
 
-fieldGuests.selectedOptions[0].disabled ? stateError(fieldGuests) : stateSuccess(fieldGuests);
+    if (fieldGuests.selectedOptions[0].disabled) {
+      stateError(fieldGuests);
+    } else {
+      stateSuccess(fieldGuests);
+    }
+  };
+
+  var onError = function () {
+    var template = document.getElementById('error').content.querySelector('.error').cloneNode(true);
+
+    document.querySelector('main').appendChild(template);
+
+    var errorMessage = document.querySelector('.error');
+    var onCLickErrorBtn = function () {
+      errorMessage.remove();
+    };
+    var onEscErrorBtn = function (evt) {
+      if (evt.keyCode === window.util.const.Keycode.ESC) {
+        errorMessage.remove();
+        document.removeEventListener('keydown', onEscErrorBtn);
+      }
+    };
+
+    document.querySelectorAll('input').forEach(function (elem) {
+      isValidity(elem);
+    });
+
+    document.addEventListener('click', onCLickErrorBtn);
+    document.addEventListener('keydown', onEscErrorBtn);
   };
 
   var onSubmitClick = function () {
     var formData = new FormData(document.querySelector('.ad-form'));
-    var xhr = new XMLHttpRequest();
+    xhr = new XMLHttpRequest();
     xhr.open('post', 'https://js.dump.academy/keksobooking');
     xhr.send(formData);
-
-    var onError = function () {
-      var template = document.getElementById('error').content.querySelector('.error').cloneNode(true);
-
-      document.querySelector('main').appendChild(template);
-
-      var errorMessage = document.querySelector('.error');
-      var onCLickErrorBtn = function () {
-        errorMessage.remove();
-      };
-      var onEscErrorBtn = function (evt) {
-        if (evt.keyCode === window.util.const.Keycode.ESC) {
-          errorMessage.remove();
-          document.removeEventListener('keydown', onEscErrorBtn);
-        }
-      };
-
-      document.querySelectorAll('input').forEach(function (elem) {
-        isValidity(elem)
-      })
-
-      document.addEventListener('click', onCLickErrorBtn);
-      document.addEventListener('keydown', onEscErrorBtn);
-    };
 
     var onSuccess = function () {
       var template = document.getElementById('success').content.querySelector('.success').cloneNode(true);
@@ -160,18 +164,18 @@ fieldGuests.selectedOptions[0].disabled ? stateError(fieldGuests) : stateSuccess
 
   var turnOffFields = function () {
     window.fields.forEach(function (elem) {
-        elem.disabled = false
+      elem.disabled = false;
     });
   };
   var deactivatedMap = function () {
     document.querySelector('.map').classList.toggle('map--faded', true);
     turnOffFields();
     document.querySelectorAll('.map__pin')
-        .forEach(function (elem, index) {
-          if (index > 0) {
-            elem.remove();
-          }
-        });
+    .forEach(function (elem, index) {
+      if (index > 0) {
+        elem.remove();
+      }
+    });
     window.flagOfActivation = 1;
     mainPin.style.left = '571px';
     mainPin.style.top = '375px';
@@ -191,21 +195,26 @@ fieldGuests.selectedOptions[0].disabled ? stateError(fieldGuests) : stateSuccess
       elem.checked = false;
     });
     document.querySelector('.ad-form').classList.add('ad-form--disabled');
+    stateSuccess(fieldGuests);
+    stateSuccess(fieldTitle);
+    stateSuccess(fieldPrice);
   };
 
   var stateSuccess = function (field) {
-          field.style.border = '1px solid #d9d9d3';
-
+    field.style.border = '1px solid #d9d9d3';
   };
 
   var stateError = function (field) {
-          field.style.border = '3px solid red'
-
-  }
+    field.style.border = '3px solid red';
+  };
 
   var isValidity = function (field) {
     field.checkValidity();
-field.validity.valid ? stateSuccess(field) : stateError(field);
+    if (field.validity.valid) {
+      stateSuccess(field);
+    } else {
+      stateError(field);
+    }
   };
 
   xhr.open('get', 'https://js.dump.academy/keksobooking/data');
@@ -217,15 +226,24 @@ field.validity.valid ? stateSuccess(field) : stateError(field);
       onError();
     }
   });
+
+  xhr.addEventListener('error', function () {
+    onError();
+  });
+
   fieldTitle.addEventListener('input', function () {
-    isValidity(fieldTitle)
+    isValidity(fieldTitle);
   });
   fieldPrice.addEventListener('input', function () {
-    isValidity(fieldPrice)
-  })
+    isValidity(fieldPrice);
+  });
   fieldGuests.addEventListener('change', function () {
-    fieldGuests.selectedOptions[0].disabled ? stateError(fieldGuests) : stateSuccess(fieldGuests);
-  })
+    if (fieldGuests.selectedOptions[0].disabled) {
+      stateError(fieldGuests);
+    } else {
+      stateSuccess(fieldGuests);
+    }
+  });
   fieldType.addEventListener('change', validationTypesPrice);
   fieldTimeIn.addEventListener('change', validationTimeIn);
   fieldTimeOut.addEventListener('change', validationTimeOut);
@@ -238,11 +256,4 @@ field.validity.valid ? stateSuccess(field) : stateError(field);
     evt.preventDefault();
     deactivatedMap();
   });
-
-
-
-  xhr.addEventListener('error', function () {
-    onError();
-  });
-
 })();
