@@ -544,6 +544,11 @@ fieldset {
   background-color: #dadada;
 }
 
+.ad-form-preview--header {
+  padding-right: 15px;
+}
+
+
 .ad-form__field {
   display: -webkit-box;
   display: -ms-flexbox;

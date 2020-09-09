@@ -126,7 +126,7 @@
   var onSubmitClick = function () {
     var formData = new FormData(document.querySelector('.ad-form'));
     xhr = new XMLHttpRequest();
-    xhr.open('post', 'https://javascript.pages.academy/keksobooking');
+    xhr.open('post', '../php/server.php');
     xhr.send(formData);
 
     var onSuccess = function () {
